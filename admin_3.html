@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz Composer — Admin</title>
+<link rel="icon" href="favicon.png" />
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-2: #1e222b; --text: #f2f3f5;
+    --muted: #9aa1ac; --good: #2e7d5b; --bad: #b3475a; --accent: #1B458F; --radius: 14px;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  #app { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 20px; }
+  .card { background: var(--panel); border: 1px solid rgba(128,128,128,0.15); border-radius: var(--radius); padding: 20px; margin-bottom: 18px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+  .stat { background: var(--panel-2); border-radius: 10px; padding: 14px; }
+  .stat .num { font-size: 1.6rem; font-weight: 700; }
+  .stat .label { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; }
+  .field-label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 8px; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .pill { background: var(--panel-2); border: 1px solid rgba(128,128,128,0.25); color: var(--text); padding: 6px 12px; border-radius: 999px; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
+  .pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(128,128,128,0.15); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  tr:last-child td { border-bottom: none; }
+  .muted { color: var(--muted); font-size: 0.85rem; }
+  input[type="email"], input[type="password"], input[type="text"], textarea, select {
+    width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid rgba(128,128,128,0.25);
+    border-radius: 8px; padding: 10px 12px; font-size: 0.95rem; font-family: inherit; margin-bottom: 12px;
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  button.primary { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  button.secondary { background: var(--panel-2); color: var(--text); border: 1px solid rgba(128,128,128,0.3); border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; cursor: pointer; font-family: inherit; }
+  button.danger { background: rgba(179,71,90,0.2); color: #ffb4c0; border: 1px solid var(--bad); border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; cursor: pointer; font-family: inherit; }
+  button.link-btn { background: none; border: none; color: #8fb3ff; text-decoration: underline; cursor: pointer; font-family: inherit; font-size: 0.85rem; padding: 0; }
+  .error-box { background: rgba(179,71,90,0.15); border: 1px solid var(--bad); border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; margin-bottom: 12px; }
+  .ok-box { background: rgba(46,125,91,0.15); border: 1px solid var(--good); border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; margin-bottom: 12px; }
+  a.back-link { color: var(--muted); font-size: 0.8rem; text-decoration: none; }
+  a.back-link:hover { text-decoration: underline; }
+  .table-scroll { overflow-x: auto; }
+  .tab-row { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab-btn { background: var(--panel); border: 1px solid rgba(128,128,128,0.25); color: var(--muted); padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; font-family: inherit; font-weight: 600; }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
+  .badge.open { background: rgba(179,71,90,0.25); color: #ffb4c0; }
+  .badge.resolved { background: rgba(46,125,91,0.25); color: #9be0c2; }
+  .badge.dismissed { background: rgba(128,128,128,0.25); color: var(--muted); }
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-start; justify-content: center; padding: 24px 12px; overflow-y: auto; z-index: 100; }
+  .modal { background: var(--panel); border-radius: var(--radius); max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal-header { position: sticky; top: 0; background: var(--panel); padding: 18px 20px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(128,128,128,0.15); }
+  .modal-header h2 { font-size: 1.05rem; margin: 0; }
+  .modal-body { padding: 16px 20px 20px; }
+  .close-x { background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; line-height: 1; padding: 4px; }
+  .option-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .option-row input[type="text"] { margin-bottom: 0; flex: 1; }
+  .option-row input[type="radio"] { width: 18px; height: 18px; flex-shrink: 0; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .flag-item { border: 1px solid rgba(128,128,128,0.15); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: var(--panel-2); }
+  .flag-item .q-text { font-weight: 600; margin: 6px 0; }
+  .flag-item .opt-list { font-size: 0.82rem; color: var(--muted); margin: 6px 0; }
+  .flag-item .opt-list .correct { color: #9be0c2; }
+  .flag-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://nljdrrwpdbljovvvuebj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5samRycndwZGJsam92dnZ1ZWJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MDE4NDIsImV4cCI6MjEwMjk3Nzg0Mn0.gWXrI7RTNQ3j50s7P-Saavcjn0sLtEZdQjN4eDJ-v3M';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Access control is Postgres Row Level Security, not this id — every table this
+// page queries or updates only returns/accepts rows for this specific authenticated
+// user; anyone else gets empty results / rejected writes no matter what this page does.
+const ADMIN_USER_ID = '6c509f30-aae0-4d43-afaf-99a0cb1c4377';
+
+async function fetchAllRows(buildQuery, pageSize = 1000) {
+  let all = [];
+  let from = 0;
+  while (true) {
+    const { data, error } = await buildQuery().range(from, from + pageSize - 1);
+    if (error) throw error;
+    const rows = data || [];
+    all = all.concat(rows);
+    if (rows.length < pageSize) break;
+    from += pageSize;
+  }
+  return all;
+}
+
+const root = document.getElementById('app');
+const state = {
+  view: 'loading', // loading | signin | denied | error | dashboard
+  tab: 'dashboard', // dashboard | review | search
+  user: null,
+  errorMessage: '',
+  authEmail: '', authPassword: '', authMessage: '', authBusy: false,
+  clubs: [], countries: [],
+  filters: { clubIds: [], countryIds: [] },
+  data: null,
+  thinExpectedOpen: false,
+  thinAttentionOpen: true,
+
+  reports: [],
+  reportsLoading: false,
+  reportsMessage: '',
+
+  qSearchTerm: '', qSearchResults: [], qSearching: false,
+  factSearchTerm: '', factSearchResults: [], factSearching: false,
+
+  modal: null, // null | 'question' | 'fact'
+  editingQuestion: null, // { id, question_text, correct_answer, difficulty_tier, status, options: [{id, option_text, is_correct}], reportId }
+  editingFact: null, // { id, fact_text, predicate, object_value_text, verification_status, difficulty_tier }
+  modalError: '', modalSaving: false,
+};
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+}
+
+function render() {
+  if (state.view === 'loading') return renderLoading();
+  if (state.view === 'signin') return renderSignIn();
+  if (state.view === 'denied') return renderDenied();
+  if (state.view === 'error') return renderError();
+  if (state.view === 'dashboard') return renderApp();
+}
+
+function renderLoading() {
+  root.innerHTML = `<h1>Quiz Composer — Admin</h1><p class="muted">Loading…</p>`;
+}
+
+function renderError() {
+  root.innerHTML = `
+    <h1>Quiz Composer — Admin</h1>
+    <div class="card"><div class="error-box">${escapeHtml(state.errorMessage)}</div></div>
+  `;
+}
+
+function renderSignIn() {
+  root.innerHTML = `
+    <h1>Quiz Composer — Admin</h1>
+    <p class="sub">This dashboard is restricted to one account. Sign in to continue.</p>
+    <div class="card" style="max-width:360px;">
+      <label class="field-label">Email</label>
+      <input type="email" id="a-email" value="${escapeHtml(state.authEmail)}" autocomplete="email" />
+      <label class="field-label">Password</label>
+      <input type="password" id="a-password" autocomplete="current-password" />
+      ${state.authMessage ? `<p class="muted" style="margin-bottom:12px;">${escapeHtml(state.authMessage)}</p>` : ''}
+      <button class="primary" id="a-submit" ${state.authBusy ? 'disabled' : ''}>${state.authBusy ? 'Signing in…' : 'Sign in'}</button>
+    </div>
+  `;
+  document.getElementById('a-submit').addEventListener('click', async () => {
+    const email = document.getElementById('a-email').value.trim();
+    const password = document.getElementById('a-password').value;
+    if (!email || !password) { state.authMessage = 'Enter your email and password.'; render(); return; }
+    state.authEmail = email;
+    state.authBusy = true;
+    render();
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      state.user = data.user;
+      await afterSignIn();
+    } catch (err) {
+      state.authMessage = err.message || 'Sign-in failed.';
+      state.authBusy = false;
+      render();
+    }
+  });
+}
+
+function renderDenied() {
+  root.innerHTML = `
+    <h1>Quiz Composer — Admin</h1>
+    <div class="card">
+      <p>Signed in as <strong>${escapeHtml(state.user.email)}</strong>, but this account isn't the dashboard admin.</p>
+      <p class="muted">Nothing sensitive was loaded — the database only shares this data with the admin account, no matter what this page does.</p>
+      <button class="primary" id="a-signout" style="margin-top:10px;">Sign out</button>
+    </div>
+  `;
+  document.getElementById('a-signout').addEventListener('click', async () => { await supabase.auth.signOut(); state.user = null; state.view = 'signin'; render(); });
+}
+
+function pillHtml(group, value, label, active) {
+  return `<button type="button" class="pill ${active ? 'active' : ''}" data-group="${group}" data-value="${escapeHtml(value)}">${escapeHtml(label)}</button>`;
+}
+
+function nameFor(list, id) {
+  if (!id) return '—';
+  const found = list.find(x => x.id === id);
+  return found ? (found.short_name || found.name) : id;
+}
+
+function objectValueDisplay(v) {
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'string') return v;
+  try { return JSON.stringify(v); } catch { return String(v); }
+}
+
+// ---------- Top-level app shell (tabs) ----------
+
+function renderApp() {
+  root.innerHTML = `
+    <h1>Quiz Composer — Admin</h1>
+    <p class="sub">Signed in as ${escapeHtml(state.user.email)} &middot; <button class="link-btn" id="a-signout">Sign out</button></p>
+    <div class="tab-row">
+      <button class="tab-btn ${state.tab === 'dashboard' ? 'active' : ''}" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn ${state.tab === 'review' ? 'active' : ''}" data-tab="review">Needs review${state.reports.length ? ` (${state.reports.length})` : ''}</button>
+      <button class="tab-btn ${state.tab === 'search' ? 'active' : ''}" data-tab="search">Search &amp; edit</button>
+    </div>
+    <div id="tab-content"></div>
+  `;
+  document.getElementById('a-signout').addEventListener('click', async () => { await supabase.auth.signOut(); state.user = null; state.view = 'signin'; render(); });
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.tab = btn.dataset.tab;
+      if (state.tab === 'review' && state.reports.length === 0 && !state.reportsLoading) loadReports();
+      render();
+    });
+  });
+
+  const content = document.getElementById('tab-content');
+  if (state.tab === 'dashboard') content.innerHTML = dashboardHtml();
+  else if (state.tab === 'review') content.innerHTML = reviewHtml();
+  else if (state.tab === 'search') content.innerHTML = searchHtml();
+
+  if (state.tab === 'dashboard') wireDashboard();
+  if (state.tab === 'review') wireReview();
+  if (state.tab === 'search') wireSearch();
+
+  if (state.modal === 'question') renderQuestionModal();
+  if (state.modal === 'fact') renderFactModal();
+}
+
+// ---------- Dashboard tab (unchanged from before) ----------
+
+function renderThinFactsGroup(statusPrefix, title, isOpen) {
+  const rows = (state.data.thinFacts || []).filter(r => r.status.startsWith(statusPrefix));
+  const toggleId = statusPrefix === 'needs_attention' ? 'a-toggle-attention' : 'a-toggle-expected';
+  return `
+    <div style="margin-bottom:14px;">
+      <button type="button" id="${toggleId}" class="pill" style="margin-bottom:10px;">
+        ${isOpen ? '▾' : '▸'} ${escapeHtml(title)} (${rows.length})
+      </button>
+      ${isOpen ? `
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Fact type</th><th>Club</th><th>Country</th><th>Predicate</th><th>Questions</th><th>Min</th><th>Reason</th></tr></thead>
+            <tbody>
+              ${rows.length ? rows.map(r => `
+                <tr>
+                  <td>${escapeHtml(r.fact_type || '—')}</td>
+                  <td>${escapeHtml(nameFor(state.clubs, r.club_id))}</td>
+                  <td>${escapeHtml(nameFor(state.countries, r.country_id))}</td>
+                  <td>${escapeHtml(r.predicate || '—')}</td>
+                  <td>${r.question_count}</td>
+                  <td>${r.min_questions}</td>
+                  <td class="muted">${escapeHtml(r.status.replace(/^(needs_attention|expected_thin):\s*/, ''))}</td>
+                </tr>
+              `).join('') : `<tr><td colspan="7" class="muted">None.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function dashboardHtml() {
+  const d = state.data;
+  const clubPills = state.clubs.map(c => pillHtml('club', c.id, c.short_name || c.name, state.filters.clubIds.includes(c.id))).join('');
+  const countryPills = state.countries.map(c => pillHtml('country', c.id, c.name, state.filters.countryIds.includes(c.id))).join('');
+  const filtered = filterBreakdown();
+
+  return `
+    <div class="card">
+      <div class="stat-grid">
+        <div class="stat"><div class="num">${d.factsTotal}</div><div class="label">Facts</div></div>
+        <div class="stat"><div class="num">${d.questionsPublished}</div><div class="label">Published questions</div></div>
+        <div class="stat"><div class="num">${d.questionsDraft}</div><div class="label">Draft questions</div></div>
+        <div class="stat"><div class="num">${d.reportsTotal}</div><div class="label">Flagged / bad answers</div></div>
+        <div class="stat"><div class="num">${d.usersTotal}</div><div class="label">Registered users</div></div>
+        <div class="stat"><div class="num">${d.quizzesTotal}</div><div class="label">Quizzes played</div></div>
+        <div class="stat"><div class="num">${d.clubsTotal}</div><div class="label">Clubs / teams</div></div>
+        <div class="stat"><div class="num">${d.playersTotal}</div><div class="label">Players on record</div></div>
+        <div class="stat"><div class="num">${d.managersTotal}</div><div class="label">Managers / officials</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="field-label">Filter breakdown by club</label>
+      <div class="pill-row">${clubPills || '<span class="muted">No clubs yet</span>'}</div>
+      <label class="field-label">Filter breakdown by country</label>
+      <div class="pill-row">${countryPills || '<span class="muted">No countries yet</span>'}</div>
+      <div class="stat-grid" style="margin-top:6px;">
+        <div class="stat"><div class="num">${filtered.facts}</div><div class="label">Facts (filtered)</div></div>
+        <div class="stat"><div class="num">${filtered.published}</div><div class="label">Published (filtered)</div></div>
+        <div class="stat"><div class="num">${filtered.draft}</div><div class="label">Draft (filtered)</div></div>
+        <div class="stat"><div class="num">${filtered.reports}</div><div class="label">Reports (filtered)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="field-label">Fact / question health</label>
+      <p class="muted" style="margin-top:0;">Per fact-type question coverage vs. target minimums (from <code>fact_type_quotas</code>).</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Fact type</th><th>Facts</th><th>Questions</th><th>Min</th><th>Max</th><th>Avg</th></tr></thead>
+          <tbody>
+            ${(d.factStats || []).map(row => `
+              <tr style="${row.fact_type === null ? 'font-weight:600;border-top:2px solid rgba(128,128,128,0.3);' : ''}">
+                <td>${row.fact_type === null ? 'All fact types' : escapeHtml(row.fact_type)}</td>
+                <td>${row.total_facts}</td>
+                <td>${row.total_questions}</td>
+                <td>${row.min_questions}</td>
+                <td>${row.max_questions}</td>
+                <td>${row.avg_questions}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="field-label">Thin facts (bottom 10% by question count)</label>
+      <p class="muted" style="margin-top:0;">Split into facts that are thin for a known structural reason (nothing to do) and facts genuinely below quota (worth reviewing). Use the Search &amp; edit tab to open and fix a specific fact.</p>
+      ${renderThinFactsGroup('needs_attention', 'Needs attention', state.thinAttentionOpen)}
+      ${renderThinFactsGroup('expected_thin', 'Expected — no action needed', state.thinExpectedOpen)}
+    </div>
+
+    <div class="card">
+      <label class="field-label">Registered users</label>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Email</th><th>Joined</th></tr></thead>
+          <tbody>
+            ${d.users.map(u => `
+              <tr><td>${escapeHtml(u.email || '—')}</td><td class="muted">${new Date(u.created_at).toLocaleDateString()}</td></tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function wireDashboard() {
+  document.querySelectorAll('.pill[data-group]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.group === 'club' ? 'clubIds' : 'countryIds';
+      const list = state.filters[key];
+      const idx = list.indexOf(btn.dataset.value);
+      if (idx >= 0) list.splice(idx, 1); else list.push(btn.dataset.value);
+      render();
+    });
+  });
+  const attentionToggle = document.getElementById('a-toggle-attention');
+  if (attentionToggle) attentionToggle.addEventListener('click', () => { state.thinAttentionOpen = !state.thinAttentionOpen; render(); });
+  const expectedToggle = document.getElementById('a-toggle-expected');
+  if (expectedToggle) expectedToggle.addEventListener('click', () => { state.thinExpectedOpen = !state.thinExpectedOpen; render(); });
+}
+
+function filterBreakdown() {
+  const d = state.data;
+  const clubOk = row => !state.filters.clubIds.length || state.filters.clubIds.includes(row.club_id);
+  const countryOk = row => !state.filters.countryIds.length || state.filters.countryIds.includes(row.country_id);
+  const facts = d.factsIndex.filter(r => clubOk(r) && countryOk(r)).length;
+  const qRows = d.questionsIndex.filter(r => clubOk(r) && countryOk(r));
+  const published = qRows.filter(r => r.status === 'published').length;
+  const draft = qRows.filter(r => r.status === 'draft').length;
+  const qIds = new Set(qRows.map(r => r.id));
+  const reports = d.reportsIndex.filter(r => qIds.has(r.question_id)).length;
+  return { facts, published, draft, reports };
+}
+
+// ---------- Needs review tab (flagged questions -> edit) ----------
+
+function reviewHtml() {
+  if (state.reportsLoading) return `<p class="muted">Loading flagged questions…</p>`;
+  return `
+    <div class="card">
+      <label class="field-label">Open reports (${state.reports.length})</label>
+      <p class="muted" style="margin-top:0;">Reported by users or flagged during review. Fix the question directly, or dismiss the report if it's not a real problem.</p>
+      ${state.reportsMessage ? `<div class="ok-box">${escapeHtml(state.reportsMessage)}</div>` : ''}
+      ${state.reports.length ? state.reports.map(r => {
+        const q = r.questions;
+        if (!q) {
+          return `
+            <div class="flag-item">
+              <span class="badge open">open</span>
+              <p class="muted">Reported question was deleted. Reason: ${escapeHtml(r.reason || '—')}</p>
+              <div class="flag-actions">
+                <button class="secondary" data-dismiss="${r.id}">Dismiss report</button>
+              </div>
+            </div>
+          `;
+        }
+        const opts = (q.question_options || []).slice().sort((a, b) => a.sort_order - b.sort_order);
+        return `
+          <div class="flag-item">
+            <span class="badge open">open</span>
+            <p class="muted" style="margin:6px 0 0;">Reason: ${escapeHtml(r.reason || '—')} &middot; reported ${new Date(r.created_at).toLocaleDateString()}</p>
+            <p class="q-text">${escapeHtml(q.question_text)}</p>
+            <div class="opt-list">
+              ${opts.map(o => `<div class="${o.is_correct ? 'correct' : ''}">${o.is_correct ? '✓ ' : '· '}${escapeHtml(o.option_text)}</div>`).join('')}
+            </div>
+            <div class="flag-actions">
+              <button class="primary" data-edit-report="${r.id}">Edit &amp; fix</button>
+              <button class="secondary" data-dismiss="${r.id}">Dismiss (not a real problem)</button>
+            </div>
+          </div>
+        `;
+      }).join('') : `<p class="muted">No open reports right now.</p>`}
+    </div>
+  `;
+}
+
+function wireReview() {
+  document.querySelectorAll('[data-edit-report]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const report = state.reports.find(r => r.id === btn.dataset.editReport);
+      if (report && report.questions) openQuestionEditor(report.questions, report.id);
+    });
+  });
+  document.querySelectorAll('[data-dismiss]').forEach(btn => {
+    btn.addEventListener('click', () => dismissReport(btn.dataset.dismiss));
+  });
+}
+
+async function loadReports() {
+  state.reportsLoading = true;
+  render();
+  try {
+    const { data, error } = await supabase
+      .from('question_reports')
+      .select('id, reason, status, created_at, questions(id, question_text, correct_answer, difficulty_tier, status, question_options(id, option_text, is_correct, sort_order))')
+      .eq('status', 'open')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    state.reports = data || [];
+  } catch (err) {
+    console.error(err);
+    state.reportsMessage = 'Could not load reports: ' + (err.message || err);
+  } finally {
+    state.reportsLoading = false;
+    render();
+  }
+}
+
+async function dismissReport(reportId) {
+  try {
+    const { error } = await supabase.from('question_reports').update({ status: 'dismissed' }).eq('id', reportId);
+    if (error) throw error;
+    state.reports = state.reports.filter(r => r.id !== reportId);
+    state.reportsMessage = 'Report dismissed.';
+    render();
+  } catch (err) {
+    state.reportsMessage = 'Could not dismiss report: ' + (err.message || err);
+    render();
+  }
+}
+
+// ---------- Search & edit tab ----------
+
+function searchHtml() {
+  return `
+    <div class="card">
+      <label class="field-label">Search questions</label>
+      <input type="text" id="q-search" placeholder="Search question text…" value="${escapeHtml(state.qSearchTerm)}" />
+      <button class="secondary" id="q-search-btn">${state.qSearching ? 'Searching…' : 'Search'}</button>
+      <div class="table-scroll" style="margin-top:14px;">
+        ${state.qSearchResults.length ? `
+          <table>
+            <thead><tr><th>Question</th><th>Status</th><th>Tier</th><th></th></tr></thead>
+            <tbody>
+              ${state.qSearchResults.map(q => `
+                <tr>
+                  <td>${escapeHtml(q.question_text)}</td>
+                  <td>${escapeHtml(q.status)}</td>
+                  <td>${q.difficulty_tier ?? '—'}</td>
+                  <td><button class="link-btn" data-edit-q="${q.id}">Edit</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        ` : `<p class="muted">No results yet — search above.</p>`}
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="field-label">Search facts</label>
+      <input type="text" id="f-search" placeholder="Search fact text…" value="${escapeHtml(state.factSearchTerm)}" />
+      <button class="secondary" id="f-search-btn">${state.factSearching ? 'Searching…' : 'Search'}</button>
+      <div class="table-scroll" style="margin-top:14px;">
+        ${state.factSearchResults.length ? `
+          <table>
+            <thead><tr><th>Fact</th><th>Predicate</th><th>Verification</th><th></th></tr></thead>
+            <tbody>
+              ${state.factSearchResults.map(f => `
+                <tr>
+                  <td>${escapeHtml(f.fact_text)}</td>
+                  <td>${escapeHtml(f.predicate)}</td>
+                  <td>${escapeHtml(f.verification_status)}</td>
+                  <td><button class="link-btn" data-edit-f="${f.id}">Edit</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        ` : `<p class="muted">No results yet — search above.</p>`}
+      </div>
+    </div>
+  `;
+}
+
+function wireSearch() {
+  document.getElementById('q-search-btn').addEventListener('click', () => searchQuestions());
+  document.getElementById('q-search').addEventListener('keydown', e => { if (e.key === 'Enter') searchQuestions(); });
+  document.getElementById('f-search-btn').addEventListener('click', () => searchFacts());
+  document.getElementById('f-search').addEventListener('keydown', e => { if (e.key === 'Enter') searchFacts(); });
+  document.querySelectorAll('[data-edit-q]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = state.qSearchResults.find(x => x.id === btn.dataset.editQ);
+      if (q) openQuestionEditor(q, null);
+    });
+  });
+  document.querySelectorAll('[data-edit-f]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const f = state.factSearchResults.find(x => x.id === btn.dataset.editF);
+      if (f) openFactEditor(f);
+    });
+  });
+}
+
+async function searchQuestions() {
+  const term = document.getElementById('q-search').value.trim();
+  state.qSearchTerm = term;
+  if (!term) { state.qSearchResults = []; render(); return; }
+  state.qSearching = true;
+  render();
+  try {
+    const { data, error } = await supabase
+      .from('questions')
+      .select('id, question_text, correct_answer, difficulty_tier, status, question_options(id, option_text, is_correct, sort_order)')
+      .ilike('question_text', `%${term}%`)
+      .limit(50);
+    if (error) throw error;
+    state.qSearchResults = data || [];
+  } catch (err) {
+    console.error(err);
+    state.qSearchResults = [];
+  } finally {
+    state.qSearching = false;
+    render();
+  }
+}
+
+async function searchFacts() {
+  const term = document.getElementById('f-search').value.trim();
+  state.factSearchTerm = term;
+  if (!term) { state.factSearchResults = []; render(); return; }
+  state.factSearching = true;
+  render();
+  try {
+    const { data, error } = await supabase
+      .from('facts')
+      .select('id, fact_text, predicate, object_value, verification_status, difficulty_tier')
+      .ilike('fact_text', `%${term}%`)
+      .limit(50);
+    if (error) throw error;
+    state.factSearchResults = data || [];
+  } catch (err) {
+    console.error(err);
+    state.factSearchResults = [];
+  } finally {
+    state.factSearching = false;
+    render();
+  }
+}
+
+// ---------- Question editor modal ----------
+
+function openQuestionEditor(q, reportId) {
+  const opts = (q.question_options || []).slice().sort((a, b) => a.sort_order - b.sort_order);
+  state.editingQuestion = {
+    id: q.id,
+    question_text: q.question_text,
+    difficulty_tier: q.difficulty_tier,
+    status: q.status,
+    reportId: reportId || null,
+    markResolved: !!reportId,
+    options: opts.map(o => ({ id: o.id, option_text: o.option_text, is_correct: o.is_correct, sort_order: o.sort_order })),
+  };
+  state.modal = 'question';
+  state.modalError = '';
+  render();
+}
+
+function closeModal() {
+  state.modal = null;
+  state.editingQuestion = null;
+  state.editingFact = null;
+  state.modalError = '';
+  render();
+}
+
+function renderQuestionModal() {
+  const eq = state.editingQuestion;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-backdrop';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Edit question</h2>
+        <button class="close-x" id="qm-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        ${state.modalError ? `<div class="error-box">${escapeHtml(state.modalError)}</div>` : ''}
+        <label class="field-label">Question text</label>
+        <textarea id="qm-text">${escapeHtml(eq.question_text)}</textarea>
+
+        <label class="field-label">Options (select the correct one)</label>
+        ${eq.options.map((o, i) => `
+          <div class="option-row">
+            <input type="radio" name="qm-correct" value="${i}" ${o.is_correct ? 'checked' : ''} />
+            <input type="text" data-opt-idx="${i}" value="${escapeHtml(o.option_text)}" />
+          </div>
+        `).join('')}
+
+        <label class="field-label">Difficulty tier</label>
+        <select id="qm-tier">
+          <option value="" ${eq.difficulty_tier == null ? 'selected' : ''}>—</option>
+          <option value="1" ${eq.difficulty_tier === 1 ? 'selected' : ''}>1 — Casual</option>
+          <option value="2" ${eq.difficulty_tier === 2 ? 'selected' : ''}>2 — Dedicated</option>
+          <option value="3" ${eq.difficulty_tier === 3 ? 'selected' : ''}>3 — Stato</option>
+        </select>
+
+        <label class="field-label">Status</label>
+        <select id="qm-status">
+          <option value="draft" ${eq.status === 'draft' ? 'selected' : ''}>Draft</option>
+          <option value="published" ${eq.status === 'published' ? 'selected' : ''}>Published</option>
+          <option value="retired" ${eq.status === 'retired' ? 'selected' : ''}>Retired</option>
+        </select>
+
+        ${eq.reportId ? `
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; margin-top:4px;">
+            <input type="checkbox" id="qm-resolve" ${eq.markResolved ? 'checked' : ''} style="width:16px;height:16px;" />
+            Mark the report resolved when I save
+          </label>
+        ` : ''}
+
+        <div class="modal-actions">
+          <button class="primary" id="qm-save" ${state.modalSaving ? 'disabled' : ''}>${state.modalSaving ? 'Saving…' : 'Save changes'}</button>
+          <button class="secondary" id="qm-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) { document.body.removeChild(overlay); closeModal(); } });
+  overlay.querySelector('#qm-close').addEventListener('click', () => { document.body.removeChild(overlay); closeModal(); });
+  overlay.querySelector('#qm-cancel').addEventListener('click', () => { document.body.removeChild(overlay); closeModal(); });
+  overlay.querySelectorAll('[data-opt-idx]').forEach(input => {
+    input.addEventListener('input', () => { eq.options[Number(input.dataset.optIdx)].option_text = input.value; });
+  });
+  overlay.querySelectorAll('input[name="qm-correct"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      eq.options.forEach((o, i) => { o.is_correct = (i === Number(radio.value)); });
+    });
+  });
+  const resolveBox = overlay.querySelector('#qm-resolve');
+  if (resolveBox) resolveBox.addEventListener('change', () => { eq.markResolved = resolveBox.checked; });
+
+  overlay.querySelector('#qm-save').addEventListener('click', async () => {
+    eq.question_text = overlay.querySelector('#qm-text').value.trim();
+    const tierVal = overlay.querySelector('#qm-tier').value;
+    eq.difficulty_tier = tierVal === '' ? null : Number(tierVal);
+    eq.status = overlay.querySelector('#qm-status').value;
+    await saveQuestionEditor(overlay);
+  });
+}
+
+async function saveQuestionEditor(overlay) {
+  const eq = state.editingQuestion;
+  if (!eq.question_text) { state.modalError = 'Question text can\'t be empty.'; document.body.removeChild(overlay); render(); return; }
+  if (eq.options.some(o => !o.option_text.trim())) { state.modalError = 'No option can be empty.'; document.body.removeChild(overlay); render(); return; }
+  const correctCount = eq.options.filter(o => o.is_correct).length;
+  if (correctCount !== 1) { state.modalError = 'Exactly one option must be marked correct.'; document.body.removeChild(overlay); render(); return; }
+
+  state.modalSaving = true;
+  render(); // re-render underneath; modal already removed from old overlay, openQuestionEditor path re-renders fresh
+  try {
+    const correctOption = eq.options.find(o => o.is_correct);
+    const { error: qErr } = await supabase.from('questions').update({
+      question_text: eq.question_text,
+      correct_answer: correctOption.option_text,
+      difficulty_tier: eq.difficulty_tier,
+      status: eq.status,
+    }).eq('id', eq.id);
+    if (qErr) throw qErr;
+
+    for (const o of eq.options) {
+      const { error: oErr } = await supabase.from('question_options').update({
+        option_text: o.option_text,
+        is_correct: o.is_correct,
+      }).eq('id', o.id);
+      if (oErr) throw oErr;
+    }
+
+    if (eq.reportId && eq.markResolved) {
+      const { error: rErr } = await supabase.from('question_reports').update({ status: 'resolved' }).eq('id', eq.reportId);
+      if (rErr) throw rErr;
+      state.reports = state.reports.filter(r => r.id !== eq.reportId);
+      state.reportsMessage = 'Question fixed and report resolved.';
+    }
+
+    // refresh search results in place if this question is in the list
+    state.qSearchResults = state.qSearchResults.map(q => q.id === eq.id
+      ? { ...q, question_text: eq.question_text, correct_answer: correctOption.option_text, difficulty_tier: eq.difficulty_tier, status: eq.status, question_options: eq.options }
+      : q);
+
+    state.modalSaving = false;
+    closeModal();
+  } catch (err) {
+    console.error(err);
+    state.modalSaving = false;
+    state.modalError = 'Could not save: ' + (err.message || err);
+    render();
+  }
+}
+
+// ---------- Fact editor modal ----------
+
+function openFactEditor(f) {
+  state.editingFact = {
+    id: f.id,
+    fact_text: f.fact_text,
+    predicate: f.predicate,
+    object_value_text: objectValueDisplay(f.object_value),
+    verification_status: f.verification_status,
+    difficulty_tier: f.difficulty_tier,
+  };
+  state.modal = 'fact';
+  state.modalError = '';
+  render();
+}
+
+function renderFactModal() {
+  const ef = state.editingFact;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-backdrop';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Edit fact</h2>
+        <button class="close-x" id="fm-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        ${state.modalError ? `<div class="error-box">${escapeHtml(state.modalError)}</div>` : ''}
+        <label class="field-label">Fact text</label>
+        <textarea id="fm-text">${escapeHtml(ef.fact_text)}</textarea>
+
+        <label class="field-label">Predicate</label>
+        <input type="text" id="fm-predicate" value="${escapeHtml(ef.predicate)}" />
+
+        <label class="field-label">Object value (raw, must stay valid JSON if quoted/structured)</label>
+        <input type="text" id="fm-object" value="${escapeHtml(ef.object_value_text)}" />
+
+        <label class="field-label">Verification status</label>
+        <select id="fm-verification">
+          <option value="unverified" ${ef.verification_status === 'unverified' ? 'selected' : ''}>Unverified</option>
+          <option value="single_source" ${ef.verification_status === 'single_source' ? 'selected' : ''}>Single source</option>
+          <option value="corroborated" ${ef.verification_status === 'corroborated' ? 'selected' : ''}>Corroborated</option>
+          <option value="disputed" ${ef.verification_status === 'disputed' ? 'selected' : ''}>Disputed</option>
+        </select>
+
+        <label class="field-label">Difficulty tier</label>
+        <select id="fm-tier">
+          <option value="" ${ef.difficulty_tier == null ? 'selected' : ''}>—</option>
+          <option value="1" ${ef.difficulty_tier === 1 ? 'selected' : ''}>1 — Casual</option>
+          <option value="2" ${ef.difficulty_tier === 2 ? 'selected' : ''}>2 — Dedicated</option>
+          <option value="3" ${ef.difficulty_tier === 3 ? 'selected' : ''}>3 — Stato</option>
+        </select>
+
+        <p class="muted">Editing a fact does not change any questions already generated from it — check the Search &amp; edit questions panel too if the wording needs to match.</p>
+
+        <div class="modal-actions">
+          <button class="primary" id="fm-save" ${state.modalSaving ? 'disabled' : ''}>${state.modalSaving ? 'Saving…' : 'Save changes'}</button>
+          <button class="secondary" id="fm-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) { document.body.removeChild(overlay); closeModal(); } });
+  overlay.querySelector('#fm-close').addEventListener('click', () => { document.body.removeChild(overlay); closeModal(); });
+  overlay.querySelector('#fm-cancel').addEventListener('click', () => { document.body.removeChild(overlay); closeModal(); });
+
+  overlay.querySelector('#fm-save').addEventListener('click', async () => {
+    ef.fact_text = overlay.querySelector('#fm-text').value.trim();
+    ef.predicate = overlay.querySelector('#fm-predicate').value.trim();
+    ef.object_value_text = overlay.querySelector('#fm-object').value;
+    ef.verification_status = overlay.querySelector('#fm-verification').value;
+    const tierVal = overlay.querySelector('#fm-tier').value;
+    ef.difficulty_tier = tierVal === '' ? null : Number(tierVal);
+    await saveFactEditor(overlay);
+  });
+}
+
+async function saveFactEditor(overlay) {
+  const ef = state.editingFact;
+  if (!ef.fact_text) { state.modalError = 'Fact text can\'t be empty.'; document.body.removeChild(overlay); render(); return; }
+
+  // object_value is jsonb. Accept plain text (wrap as a JSON string) or valid JSON typed directly.
+  let objectValue;
+  const raw = ef.object_value_text;
+  try {
+    objectValue = JSON.parse(raw);
+  } catch {
+    objectValue = raw; // plain string value, stored as a JSON string
+  }
+
+  state.modalSaving = true;
+  render();
+  try {
+    const { error } = await supabase.from('facts').update({
+      fact_text: ef.fact_text,
+      predicate: ef.predicate,
+      object_value: objectValue,
+      verification_status: ef.verification_status,
+      difficulty_tier: ef.difficulty_tier,
+    }).eq('id', ef.id);
+    if (error) throw error;
+
+    state.factSearchResults = state.factSearchResults.map(f => f.id === ef.id
+      ? { ...f, fact_text: ef.fact_text, predicate: ef.predicate, object_value: objectValue, verification_status: ef.verification_status, difficulty_tier: ef.difficulty_tier }
+      : f);
+
+    state.modalSaving = false;
+    closeModal();
+  } catch (err) {
+    console.error(err);
+    state.modalSaving = false;
+    state.modalError = 'Could not save: ' + (err.message || err);
+    render();
+  }
+}
+
+// ---------- Load & auth ----------
+
+async function afterSignIn() {
+  if (state.user.id !== ADMIN_USER_ID) { state.view = 'denied'; render(); return; }
+  await loadDashboard();
+  loadReports();
+}
+
+async function loadDashboard() {
+  state.view = 'loading';
+  render();
+  try {
+    const [
+      factsIndex, questionsIndex, reportsIndexRes,
+      usersRes, sessionsRes, clubsRes, countriesRes, playersRes, managersRes,
+      factStatsRes, thinFactsRes,
+    ] = await Promise.all([
+      fetchAllRows(() => supabase.from('facts').select('id, club_id, country_id')),
+      fetchAllRows(() => supabase.from('questions').select('id, club_id, country_id, status')),
+      supabase.from('question_reports').select('question_id'),
+      supabase.from('profiles').select('email, created_at').order('created_at', { ascending: false }),
+      supabase.from('quiz_sessions').select('id', { count: 'exact', head: true }),
+      supabase.from('clubs').select('id, name, short_name').order('name'),
+      supabase.from('countries').select('id, name').order('name'),
+      supabase.from('affiliations').select('person_id', { count: 'exact', head: true }).eq('role', 'player'),
+      supabase.from('affiliations').select('person_id', { count: 'exact', head: true }).eq('role', 'manager'),
+      supabase.from('v_fact_question_stats').select('*'),
+      fetchAllRows(() => supabase.from('v_thin_facts').select('*')),
+    ]);
+
+    const results = { reportsIndexRes, usersRes, sessionsRes, clubsRes, countriesRes, playersRes, managersRes, factStatsRes };
+    for (const [key, res] of Object.entries(results)) { if (res.error) throw new Error(`${key}: ${res.error.message}`); }
+
+    state.clubs = clubsRes.data || [];
+    state.countries = countriesRes.data || [];
+
+    state.data = {
+      factsTotal: factsIndex.length,
+      questionsPublished: questionsIndex.filter(q => q.status === 'published').length,
+      questionsDraft: questionsIndex.filter(q => q.status === 'draft').length,
+      reportsTotal: reportsIndexRes.data.length,
+      usersTotal: usersRes.data.length,
+      quizzesTotal: sessionsRes.count || 0,
+      clubsTotal: state.clubs.length,
+      playersTotal: playersRes.count || 0,
+      managersTotal: managersRes.count || 0,
+      factsIndex: factsIndex,
+      questionsIndex: questionsIndex,
+      reportsIndex: reportsIndexRes.data,
+      users: usersRes.data,
+      factStats: (factStatsRes.data || []).slice().sort((a, b) => {
+        if (a.fact_type === null) return 1;
+        if (b.fact_type === null) return -1;
+        return a.fact_type.localeCompare(b.fact_type);
+      }),
+      thinFacts: thinFactsRes || [],
+    };
+
+    state.view = 'dashboard';
+    render();
+  } catch (err) {
+    console.error(err);
+    state.errorMessage = 'Could not load admin data: ' + (err.message || err);
+    state.view = 'error';
+    render();
+  }
+}
+
+supabase.auth.onAuthStateChange((_event, session) => {
+  state.user = session ? session.user : null;
+});
+
+supabase.auth.getSession().then(async ({ data }) => {
+  state.user = data.session ? data.session.user : null;
+  if (!state.user) { state.view = 'signin'; render(); return; }
+  await afterSignIn();
+});
+</script>
+</body>
+</html>
