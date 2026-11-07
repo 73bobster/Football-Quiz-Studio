@@ -75,12 +75,13 @@
 <body>
 <div id="app"></div>
 
+<script src="neon.js"></script>
 <script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const { createClient } = window.NeonJS;
 
-const SUPABASE_URL = 'https://nljdrrwpdbljovvvuebj.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5samRycndwZGJsam92dnZ1ZWJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MDE4NDIsImV4cCI6MjEwMjk3Nzg0Mn0.gWXrI7RTNQ3j50s7P-Saavcjn0sLtEZdQjN4eDJ-v3M';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const NEON_URL = 'https://ep-patient-fire-zah58qjn.c-2.eu-west-2.aws.neon.tech/neondb';
+const NEON_AUTH_URL = 'https://ep-patient-fire-zah58qjn.neonauth.c-2.eu-west-2.aws.neon.tech/neondb/auth';
+const supabase = createClient(NEON_URL, { auth: { allowAnonymous: true } });
 
 // This id only decides whether we bother trying to load admin data client-side.
 // Actual access control is Postgres Row Level Security on every table this
