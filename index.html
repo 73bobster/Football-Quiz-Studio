@@ -1209,8 +1209,10 @@ async function submitAuth() {
   refreshModal('auth-backdrop', renderAuthModal);
   try {
     if (state.authTab === 'login') {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      // Neon's client only broadcasts auth events to OTHER tabs, so set the user here.
+      state.user = data && data.session ? data.session.user : (data && data.user) || null;
       state.authModalOpen = false;
     } else {
       const { error } = await supabase.auth.signUp({
@@ -1241,6 +1243,7 @@ async function submitAuth() {
 
 async function signOut() {
   await supabase.auth.signOut();
+  state.user = null;
   state.settingsOpen = false;
   closeModal('settings-backdrop');
   render();
