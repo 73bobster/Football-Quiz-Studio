@@ -322,7 +322,7 @@ const supabase = createClient(NEON_URL, { auth: { allowAnonymous: true } });
 // UI convenience only — the admin dashboard link only shows for this account.
 // Actual access control is enforced server-side by Postgres Row Level Security
 // policies keyed to this same user id, not by this check.
-const ADMIN_USER_ID = '6c509f30-aae0-4d43-afaf-99a0cb1c4377';
+const ADMIN_USER_ID = '75f1346c-8e8f-431a-964e-c394be9c1b37';
 
 // Supabase/PostgREST caps any single request at 1000 rows by default. Once the
 // question bank grew past 1000 rows, every plain `.select()` below started

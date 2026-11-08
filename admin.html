@@ -87,7 +87,7 @@ const supabase = createClient(NEON_URL, { auth: { allowAnonymous: true } });
 // Actual access control is Postgres Row Level Security on every table this
 // page reads AND writes — only this account gets rows back or is allowed to
 // write, no matter what this page does.
-const ADMIN_USER_ID = '6c509f30-aae0-4d43-afaf-99a0cb1c4377';
+const ADMIN_USER_ID = '75f1346c-8e8f-431a-964e-c394be9c1b37';
 
 // Supabase/PostgREST caps any single request at 1000 rows by default.
 async function fetchAllRows(buildQuery, pageSize = 1000) {
