@@ -6,41 +6,67 @@
 <title>Quiz Composer — Football Trivia</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,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" />
 <link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#1B458F" />
+<meta name="theme-color" content="#0A1A40" />
 <link rel="apple-touch-icon" href="apple-touch-icon-180.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Quiz Composer" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  /* ---------------------------------------------------------------
+     Cobalt Pink look & feel.
+     Every brand value lives in this :root block so exact values from
+     cobaltpinksoftware.com can be dropped in here without touching
+     anything else. #0A1A40 (navy) is the site's own theme colour;
+     the cobalt / pink accents are inferred from the brand name.
+     --------------------------------------------------------------- */
   :root {
-    --club-primary: #1B458F;
+    --club-primary: #2B5BFF;      /* cobalt (overridden by club-themed palette) */
     --club-secondary: #ffffff;
-    --bg: #0f1115;
-    --panel: #171a21;
-    --panel-2: #1e222b;
-    --text: #f2f3f5;
-    --muted: #9aa1ac;
-    --good: #2e7d5b;
-    --bad: #b3475a;
-    --radius: 14px;
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --brand-pink: #FF4D9D;        /* pink accent: fills, dots, gradients */
+    --pink-text: #FF8AC0;         /* pink for small text (contrast-safe on navy) */
+    --grad-text-start: #7D9BFF;   /* lighter cobalt for gradient text on dark */
+    --bg: #0A1A40;
+    --panel: #0F2252;
+    --panel-2: #172E6B;
+    --text: #F4F7FF;
+    --muted: #9DB0E0;
+    --line: rgba(140,165,235,0.22);
+    --good: #1f9d70;
+    --bad: #e0457b;
+    --radius: 22px;
+    --radius-sm: 14px;
+    --shadow: 0 14px 40px rgba(2,8,28,0.38);
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   [data-theme="light"] {
-    --bg: #f4f5f7;
+    --bg: #F3F6FF;
     --panel: #ffffff;
-    --panel-2: #eef0f3;
-    --text: #1b1d22;
-    --muted: #5b6270;
+    --panel-2: #E9EFFF;
+    --text: #0A1A40;
+    --muted: #5A6A94;
+    --pink-text: #C2185B;
+    --grad-text-start: #2B5BFF;
+    --shadow: 0 14px 40px rgba(10,26,64,0.10);
   }
   * { box-sizing: border-box; }
+  html { background: var(--bg); }
   html, body {
     margin: 0; padding: 0;
-    background: var(--bg);
+    background-color: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Soft cobalt / pink glow behind dark themes (follows the club colour). */
+  body[data-theme="dark"] {
+    background-image:
+      radial-gradient(900px 480px at 6% -8%, color-mix(in srgb, var(--club-primary) 34%, transparent), transparent 62%),
+      radial-gradient(720px 420px at 100% 2%, rgba(255,77,157,0.15), transparent 60%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
   }
   #app {
     max-width: 760px;
@@ -51,28 +77,46 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
   header.top .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     flex: 1;
     min-width: 0;
   }
   .logo-img {
-    width: 42px; height: 42px;
-    border-radius: 11px;
+    width: 46px; height: 46px;
+    border-radius: 14px;
     flex-shrink: 0;
     display: block;
+    box-shadow: 0 0 0 1px var(--line), 0 8px 22px color-mix(in srgb, var(--club-primary) 40%, transparent);
+  }
+  .eyebrow {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pink-text);
+    margin-bottom: 3px;
   }
   header.top h1 {
-    font-size: 1.3rem;
+    font-size: 1.45rem;
+    font-weight: 800;
     margin: 0;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .accent-text {
+    background: linear-gradient(90deg, var(--grad-text-start), var(--brand-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   header.top p {
-    margin: 2px 0 0;
+    margin: 3px 0 0;
     color: var(--muted);
     font-size: 0.8rem;
   }
@@ -84,39 +128,83 @@
   }
   .icon-btn {
     background: var(--panel-2);
-    border: 1px solid rgba(128,128,128,0.25);
+    border: 1px solid var(--line);
     color: var(--text);
-    border-radius: 10px;
-    padding: 8px 12px;
+    border-radius: 999px;
+    padding: 8px 15px;
     font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
+    transition: border-color .15s, transform .15s;
   }
+  .icon-btn:hover { border-color: var(--brand-pink); transform: translateY(-1px); }
   .card {
     background: var(--panel);
-    border: 1px solid rgba(128,128,128,0.15);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
-    padding: 22px;
+    padding: 24px;
     margin-bottom: 18px;
+    box-shadow: var(--shadow);
   }
-  .field { margin-bottom: 18px; }
+  .card-head { margin-bottom: 18px; }
+  .card-head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .card-head .muted { display: block; margin-top: 4px; }
+  .launch-card {
+    border-color: color-mix(in srgb, var(--club-primary) 55%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--club-primary) 16%, var(--panel)), var(--panel) 70%);
+  }
+  .launch-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .launch-row .count-field { width: 120px; margin-bottom: 0; }
+  .launch-row .count-field input { height: 52px; text-align: center; font-weight: 700; font-size: 1.05rem; }
+  .launch-row button.primary { flex: 1 1 220px; height: 52px; padding-top: 0; padding-bottom: 0; }
+  .field { margin-bottom: 20px; }
   .field label.field-label {
     display: block;
-    font-size: 0.78rem;
+    font-size: 0.7rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.12em;
     color: var(--muted);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+  }
+  .field label.field-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--brand-pink);
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative; top: -1px;
   }
   select, input[type="number"], input[type="email"], input[type="password"], input[type="text"], textarea {
     width: 100%;
     background: var(--panel-2);
     color: var(--text);
-    border: 1px solid rgba(128,128,128,0.25);
-    border-radius: 8px;
-    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 11px 14px;
     font-size: 0.95rem;
     font-family: inherit;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--brand-pink);
+    box-shadow: 0 0 0 3px rgba(255,77,157,0.25);
   }
   textarea { resize: vertical; min-height: 60px; }
   .grid-2 {
@@ -131,43 +219,55 @@
   }
   .pill {
     background: var(--panel-2);
-    border: 1px solid rgba(128,128,128,0.25);
+    border: 1px solid var(--line);
     color: var(--text);
-    padding: 7px 13px;
+    padding: 8px 15px;
     border-radius: 999px;
-    font-size: 0.83rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
+    transition: border-color .15s, background .15s, transform .15s, box-shadow .15s;
   }
+  .pill:hover { border-color: color-mix(in srgb, var(--club-primary) 75%, white); transform: translateY(-1px); }
   .pill.active {
     background: var(--club-primary);
     border-color: var(--club-primary);
     color: #fff;
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--club-primary) 45%, transparent);
   }
-  .pill.small { padding: 5px 11px; font-size: 0.78rem; }
+  .pill.small { padding: 6px 12px; font-size: 0.78rem; }
   button.primary {
     width: 100%;
-    background: var(--club-primary);
+    background: linear-gradient(120deg, var(--club-primary) 0%, var(--brand-pink) 135%);
     color: #fff;
     border: none;
-    border-radius: 10px;
-    padding: 14px;
+    border-radius: 999px;
+    padding: 15px 24px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.01em;
     cursor: pointer;
     font-family: inherit;
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--club-primary) 42%, transparent);
+    transition: transform .15s, filter .15s, box-shadow .15s;
   }
-  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  button.primary.compact { width: auto; padding: 10px 18px; font-size: 0.9rem; }
+  button.primary:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.08); }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+  button.primary.compact { width: auto; padding: 10px 20px; font-size: 0.9rem; }
   button.secondary {
     background: transparent;
     color: var(--text);
-    border: 1px solid rgba(128,128,128,0.3);
-    border-radius: 10px;
-    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 18px;
     font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
     font-family: inherit;
+    transition: border-color .15s;
   }
+  button.secondary:hover { border-color: var(--brand-pink); }
   button.text-link {
     background: none;
     border: none;
@@ -182,67 +282,86 @@
   .checkbox-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 0;
   }
-  .checkbox-row input { width: auto; }
+  .checkbox-row input { width: auto; accent-color: var(--club-primary); }
   .q-progress {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     font-size: 0.85rem;
+    font-weight: 600;
     color: var(--muted);
   }
   .q-text {
-    font-size: 1.12rem;
+    font-size: 1.2rem;
+    font-weight: 600;
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
   .options { display: flex; flex-direction: column; gap: 10px; }
   .opt {
     text-align: left;
     background: var(--panel-2);
-    border: 1px solid rgba(128,128,128,0.25);
+    border: 1px solid var(--line);
     color: var(--text);
-    padding: 13px 16px;
-    border-radius: 10px;
+    padding: 14px 18px;
+    border-radius: 16px;
     font-size: 0.95rem;
+    font-weight: 500;
     cursor: pointer;
     font-family: inherit;
+    transition: border-color .15s, transform .15s;
   }
-  .opt:hover { border-color: rgba(128,128,128,0.5); }
+  .opt:hover { border-color: color-mix(in srgb, var(--club-primary) 80%, white); transform: translateY(-1px); }
   .opt.correct { background: var(--good); border-color: var(--good); color: #fff; }
   .opt.incorrect { background: var(--bad); border-color: var(--bad); color: #fff; }
   .opt.disabled { cursor: default; opacity: 0.9; }
+  .opt.disabled:hover { transform: none; }
   .opt.reveal-correct-not-picked { border-color: var(--good); box-shadow: inset 0 0 0 2px var(--good); }
-  .actions-row { display: flex; justify-content: flex-end; margin-top: 18px; gap: 10px; }
-  .score-hero { text-align: center; padding: 26px 10px 6px; }
-  .score-hero .big { font-size: 2.6rem; font-weight: 700; }
+  .actions-row { display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px; }
+  .score-hero { text-align: center; padding: 28px 10px 8px; }
+  .score-hero .big {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--grad-text-start), var(--brand-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   .footer-note { text-align: center; color: var(--muted); font-size: 0.76rem; margin-top: 26px; line-height: 1.6; }
-  .error-box { background: rgba(179,71,90,0.15); border: 1px solid var(--bad); border-radius: 10px; padding: 14px; font-size: 0.9rem; }
-  .info-box { background: rgba(46,125,91,0.12); border: 1px solid var(--good); border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; margin-bottom: 14px; }
+  .error-box { background: rgba(224,69,123,0.14); border: 1px solid var(--bad); border-radius: var(--radius-sm); padding: 14px; font-size: 0.9rem; }
+  .info-box { background: rgba(31,157,112,0.13); border: 1px solid var(--good); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.85rem; margin-bottom: 14px; }
   .spinner-row { text-align: center; padding: 30px 0; color: var(--muted); }
   .report-zone { margin-top: 14px; }
   .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    position: fixed; inset: 0; background: rgba(4,10,30,0.62);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center;
     padding: 20px; z-index: 50;
   }
   .modal {
     background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
-    padding: 24px;
+    box-shadow: var(--shadow);
+    padding: 26px;
     max-width: 420px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
   }
-  .modal h2 { margin-top: 0; font-size: 1.1rem; }
+  .modal h2 { margin-top: 0; font-size: 1.15rem; font-weight: 800; }
   .tab-row { display: flex; gap: 6px; margin-bottom: 18px; }
   .tab-btn {
-    flex: 1; background: var(--panel-2); border: 1px solid rgba(128,128,128,0.25);
-    color: var(--text); padding: 9px; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-family: inherit;
+    flex: 1; background: var(--panel-2); border: 1px solid var(--line);
+    color: var(--text); padding: 9px; border-radius: 999px; cursor: pointer;
+    font-size: 0.88rem; font-weight: 600; font-family: inherit;
   }
   .tab-btn.active { background: var(--club-primary); border-color: var(--club-primary); color: #fff; }
   .close-x {
@@ -264,42 +383,45 @@
   }
   .exit-quiz-btn {
     background: none; border: none; color: var(--muted); cursor: pointer;
-    font-size: 1.1rem; padding: 4px 6px; line-height: 1; border-radius: 8px;
+    font-size: 1.1rem; padding: 4px 8px; line-height: 1; border-radius: 999px;
   }
   .exit-quiz-btn:hover { color: var(--text); background: var(--panel-2); }
   .available-counter {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: var(--panel);
-    border: 1px solid rgba(128,128,128,0.2);
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
     border-radius: 999px;
-    padding: 6px 14px;
-    margin-bottom: 14px;
+    padding: 7px 16px;
+    margin-bottom: 16px;
     text-align: center;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 14px rgba(2,8,28,0.22);
     font-size: 0.78rem;
     color: var(--muted);
   }
   .available-counter strong {
     color: var(--text);
-    font-weight: 600;
+    font-weight: 800;
   }
   .difficulty-badge {
     display: inline-block;
-    background: var(--panel-2);
-    border: 1px solid rgba(128,128,128,0.3);
+    background: color-mix(in srgb, var(--brand-pink) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--brand-pink) 45%, transparent);
     border-radius: 999px;
-    padding: 3px 10px;
-    font-size: 0.75rem;
-    color: var(--muted);
+    padding: 3px 11px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--pink-text);
     margin-bottom: 10px;
   }
   .color-field-row { display: flex; align-items: center; gap: 10px; }
   .color-field-row label { font-size: 0.85rem; flex: 1; }
   .color-field-row input[type="color"] {
-    width: 44px; height: 34px; padding: 2px; border-radius: 8px;
-    border: 1px solid rgba(128,128,128,0.25); background: var(--panel-2); cursor: pointer;
+    width: 44px; height: 34px; padding: 2px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--panel-2); cursor: pointer;
   }
 </style>
 </head>
@@ -520,12 +642,13 @@ function applyTheme() {
   } else {
     root.style.removeProperty('--bg'); root.style.removeProperty('--text');
     root.style.removeProperty('--panel'); root.style.removeProperty('--panel-2'); root.style.removeProperty('--muted');
-    root.style.setProperty('--club-primary', '#1B458F');
+    root.style.setProperty('--club-primary', '#2B5BFF');
     root.style.setProperty('--club-secondary', '#ffffff');
     body.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
   }
   const fontMap = {
-    system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    system: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    native: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
     poppins: "'Poppins', sans-serif",
     serif: "'Merriweather', Georgia, serif",
   };
@@ -562,7 +685,8 @@ function headerHtml() {
     <div class="brand">
       <img class="logo-img" src="${LOGO_DATA_URI}" alt="Quiz Composer logo" />
       <div style="min-width:0;">
-        <h1>Quiz Composer</h1>
+        <span class="eyebrow">Football trivia</span>
+        <h1>Quiz <span class="accent-text">Composer</span></h1>
         <p>Select what you want, then create the quiz</p>
       </div>
     </div>
@@ -624,52 +748,63 @@ function renderSetup() {
       <strong>${fmt(availableCount)}</strong> question${availableCount === 1 ? '' : 's'} available with the current filters
     </div>
 
-    <div class="card">
-      <div class="field">
-        <label class="field-label">Audience preset</label>
-        <div class="pill-row">${presetButtons}</div>
-        <p class="muted" style="margin-top:8px;">Presets set a question count — pick one or configure manually below.</p>
+    <div class="card launch-card">
+      <div class="card-head">
+        <span class="eyebrow">Quick start</span>
+        <h2>Build your quiz</h2>
       </div>
 
       <div class="field">
-        <label class="field-label">Countries &mdash; leave empty for any</label>
+        <label class="field-label">Audience preset</label>
+        <div class="pill-row">${presetButtons}</div>
+        <p class="muted" style="margin-top:8px;">Presets set a question count &mdash; pick one or choose your own number.</p>
+      </div>
+
+      <div class="launch-row">
+        <div class="field count-field">
+          <label class="field-label" for="f-count">Questions</label>
+          <input type="number" id="f-count" min="1" max="50" value="${state.filters.count}" />
+        </div>
+        <button class="primary" id="generate-btn" ${availableCount === 0 ? 'disabled' : ''}>Generate Quiz</button>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="f-generate-mc" ${state.filters.generateMc ? 'checked' : ''} />
+        <label for="f-generate-mc">Show multiple-choice options (curated per question; auto-generated as a fallback for the rare question without any yet)</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Narrow it down</h2>
+        <span class="muted">All optional &mdash; leave a section empty to include everything.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Countries</label>
         <div class="pill-row">${countryPills || '<span class="muted">No countries yet</span>'}</div>
         <p class="muted" style="margin-top:8px;">Selecting a country narrows the clubs below to that country.</p>
       </div>
 
       <div class="field">
-        <label class="field-label">Clubs / Countries &mdash; leave empty for any</label>
+        <label class="field-label">Clubs / Countries</label>
         <div class="pill-row">${clubPills || '<span class="muted">No clubs match that country</span>'}</div>
       </div>
 
       <div class="field">
-        <label class="field-label">Categories &mdash; leave empty for any</label>
+        <label class="field-label">Categories</label>
         <div class="pill-row">${categoryPills}${tournamentPills}</div>
       </div>
 
       <div class="field">
-        <label class="field-label">Era(s) &mdash; leave empty for any</label>
+        <label class="field-label">Era(s)</label>
         <div class="pill-row">${decadePills || '<span class="muted">No eras yet</span>'}</div>
       </div>
 
-      <div class="field">
-        <label class="field-label">Difficulty &mdash; leave empty for any</label>
+      <div class="field" style="margin-bottom:0;">
+        <label class="field-label">Difficulty</label>
         <div class="pill-row">${difficultyPills}</div>
       </div>
-
-      <div class="grid-2">
-        <div class="field">
-          <label class="field-label">Number of questions</label>
-          <input type="number" id="f-count" min="1" max="50" value="${state.filters.count}" />
-        </div>
-      </div>
-
-      <div class="field checkbox-row">
-        <input type="checkbox" id="f-generate-mc" ${state.filters.generateMc ? 'checked' : ''} />
-        <label for="f-generate-mc">Show multiple-choice options (curated per question; auto-generated as a fallback for the rare question without any yet)</label>
-      </div>
-
-      <button class="primary" id="generate-btn" ${availableCount === 0 ? 'disabled' : ''}>Generate Quiz</button>
     </div>
 
     <p class="footer-note">
@@ -1274,7 +1409,8 @@ function renderSettingsModal() {
       <div class="field">
         <label class="field-label">Font</label>
         <select id="set-font">
-          <option value="system" ${state.settings.font === 'system' ? 'selected' : ''}>System default</option>
+          <option value="system" ${state.settings.font === 'system' ? 'selected' : ''}>Plus Jakarta Sans (default)</option>
+          <option value="native" ${state.settings.font === 'native' ? 'selected' : ''}>System font</option>
           <option value="poppins" ${state.settings.font === 'poppins' ? 'selected' : ''}>Poppins (rounded)</option>
           <option value="serif" ${state.settings.font === 'serif' ? 'selected' : ''}>Merriweather (serif)</option>
         </select>
