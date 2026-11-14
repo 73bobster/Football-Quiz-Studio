@@ -71,24 +71,24 @@
   #app {
     max-width: 760px;
     margin: 0 auto;
-    padding: 28px 20px 80px;
+    padding: 14px 16px 70px;
   }
   header.top {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 22px;
+    gap: 10px;
+    margin-bottom: 12px;
   }
   header.top .brand {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     flex: 1;
     min-width: 0;
   }
   .logo-img {
-    width: 46px; height: 46px;
-    border-radius: 14px;
+    width: 36px; height: 36px;
+    border-radius: 11px;
     flex-shrink: 0;
     display: block;
     box-shadow: 0 0 0 1px var(--line), 0 8px 22px color-mix(in srgb, var(--club-primary) 40%, transparent);
@@ -103,11 +103,12 @@
     margin-bottom: 3px;
   }
   header.top h1 {
-    font-size: 1.45rem;
+    font-size: 1.15rem;
     font-weight: 800;
     margin: 0;
     letter-spacing: -0.02em;
     line-height: 1.15;
+    white-space: nowrap;
   }
   .accent-text {
     background: linear-gradient(90deg, var(--grad-text-start), var(--brand-pink));
@@ -131,7 +132,7 @@
     border: 1px solid var(--line);
     color: var(--text);
     border-radius: 999px;
-    padding: 8px 15px;
+    padding: 7px 13px;
     font-size: 0.85rem;
     font-weight: 600;
     font-family: inherit;
@@ -139,6 +140,14 @@
     white-space: nowrap;
     transition: border-color .15s, transform .15s;
   }
+  .account-btn {
+    width: 34px; height: 34px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; text-transform: uppercase;
+    background: linear-gradient(135deg, var(--club-primary), var(--brand-pink));
+    border-color: transparent; color: #fff;
+  }
+  #settings-btn { width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
   .icon-btn:hover { border-color: var(--brand-pink); transform: translateY(-1px); }
   .card {
     background: var(--panel);
@@ -167,9 +176,15 @@
     flex-wrap: wrap;
     margin-bottom: 14px;
   }
-  .launch-row .count-field { width: 120px; margin-bottom: 0; }
+  .launch-row .count-field { width: 86px; margin-bottom: 0; }
   .launch-row .count-field input { height: 52px; text-align: center; font-weight: 700; font-size: 1.05rem; }
-  .launch-row button.primary { flex: 1 1 220px; height: 52px; padding-top: 0; padding-bottom: 0; }
+  .launch-row button.primary { flex: 1 1 150px; height: 52px; padding-top: 0; padding-bottom: 0; }
+  .launch-row .count-field .field-label::before { display: none; }
+  @media (max-width: 520px) {
+    .card { padding: 18px; margin-bottom: 14px; }
+    .card-head { margin-bottom: 12px; }
+    .field { margin-bottom: 16px; }
+  }
   .field { margin-bottom: 20px; }
   .field label.field-label {
     display: block;
@@ -394,8 +409,8 @@
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     border: 1px solid var(--line);
     border-radius: 999px;
-    padding: 7px 16px;
-    margin-bottom: 16px;
+    padding: 6px 14px;
+    margin-bottom: 12px;
     text-align: center;
     box-shadow: 0 4px 14px rgba(2,8,28,0.22);
     font-size: 0.78rem;
@@ -679,15 +694,13 @@ function render() {
 
 function headerHtml() {
   const authArea = state.user
-    ? `<span class="muted" style="font-size:0.8rem;">${escapeHtml(state.user.email)}</span>`
+    ? `<button class="icon-btn account-btn" id="account-btn" title="${escapeAttr(state.user.email)}" aria-label="Account: ${escapeAttr(state.user.email)}">${escapeHtml((state.user.email || '?').trim().charAt(0))}</button>`
     : `<button class="icon-btn" id="signin-btn">Sign in</button>`;
   return `
     <div class="brand">
       <img class="logo-img" src="${LOGO_DATA_URI}" alt="Quiz Composer logo" />
       <div style="min-width:0;">
-        <span class="eyebrow">Football trivia</span>
         <h1>Quiz <span class="accent-text">Composer</span></h1>
-        <p>Select what you want, then create the quiz</p>
       </div>
     </div>
     <div class="header-actions">
@@ -714,6 +727,9 @@ function wireHeaderEvents() {
   if (signinBtn) signinBtn.addEventListener('click', () => { state.authModalOpen = true; render(); });
   const settingsBtn = document.getElementById('settings-btn');
   if (settingsBtn) settingsBtn.addEventListener('click', () => { state.settingsOpen = true; render(); });
+  // The account circle opens Settings, where the signed-in email is shown under "Account".
+  const accountBtn = document.getElementById('account-btn');
+  if (accountBtn) accountBtn.addEventListener('click', () => { state.settingsOpen = true; render(); });
 }
 
 function renderSetup() {
@@ -750,14 +766,12 @@ function renderSetup() {
 
     <div class="card launch-card">
       <div class="card-head">
-        <span class="eyebrow">Quick start</span>
         <h2>Build your quiz</h2>
       </div>
 
       <div class="field">
         <label class="field-label">Audience preset</label>
         <div class="pill-row">${presetButtons}</div>
-        <p class="muted" style="margin-top:8px;">Presets set a question count &mdash; pick one or choose your own number.</p>
       </div>
 
       <div class="launch-row">
